@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Loan Prediction</title>
+    <style>
+        body{
+            background-color: #f8f9fa;
+            font-family:Arial, sans-serif;
+        }
+        .container{
+          margin-top:50px;
+          background-color: white;
+          border-radius: 8px;
+          box-shadow:0 2px 10px rgba(0,0,0,0.1);
+          padding:30px;
+        }
+        h1{
+            color:#343a40;
+        }
+        .result{
+            margin-top: 50px;
+            font-size:1.5em;
+            font-weight:bold;
+
+        }
+        .btn{
+            margin-top:20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class= "text-center">Loan Approval model</h1>
+            <form id="loan-form">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="income">Income</label>
+                    <input type="number" class="form-control" id="income" placeholder="Enter your income" required>
+                </div>
+                <div class="form-group">
+                    <label for="credit_score">credit score</label>
+                    <input type="number" class="form-control" id="credit_score" placeholder="Enter your credit score" required>
+                </div>
+                <button type="submit"class="btn btn-primary btn-block">Check Loan Approval</button>
+            </form>
+            <div id="result" class="result text-center"></div>
+       </div>
+       <script>
+        document.getElementById('loan-form').addEventListener('submit',async function(event){
+            event.preventDefault();
+            const name=document.getElementById('name').value;
+            const income=document.getElementById('income').value;
+            const creditScore=document.getElementById('credit_score').value;
+            const response=await fetch('http://127.0.0.1:5000/predict',{
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body: JSON.stringify({income:parseInt(income),credit_score:parseInt(creditScore)})
+            });
+            const data=await response.json();
+            document.getElementById('result').innerHTML=`Loan Status for ${name}:${data.result}`;
+        });
+       </script>
+</body>
+</html>
